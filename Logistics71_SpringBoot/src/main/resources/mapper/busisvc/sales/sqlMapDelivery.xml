@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+   
+<mapper namespace="kr.co.seoulit.logistics.busisvc.sales.mapper.DeliveryMapper">
+	
+	<resultMap type="kr.co.seoulit.logistics.busisvc.sales.to.DeliveryInfoTO" id="deliveryInfoResult">
+		<result property="deliveryNo" column="DELIVERY_NO" />
+		<result property="estimateNo" column="ESTIMATE_NO" />
+		<result property="contractNo" column="CONTRACT_NO" />
+		<result property="contractDetailNo" column="CONTRACT_DETAIL_NO" />
+		<result property="customerCode" column="CUSTOMER_CODE" />
+		<result property="personCodeInCharge" column="PERSON_CODE_IN_CHARGE" />
+		<result property="itemCode" column="ITEM_CODE"  />
+		<result property="itemName" column="ITEM_NAME"  />
+		<result property="unitOfDelivery" column="UNIT_OF_DELIVERY" />
+		<result property="deliveryAmount" column="DELIVERY_AMOUNT" />
+		<result property="unitPrice" column="UNIT_PRICE"  />
+		<result property="sumPrice" column="SUM_PRICE" />
+		<result property="deliveryDate" column="DELIVERY_DATE" />		
+		<result property="deliveryPlaceName" column="DELIVERY_PLACE_NAME" />
+	</resultMap>
+	
+	<select id="selectDeliveryInfoList" resultMap="deliveryInfoResult">
+		SELECT * FROM DELIVERY_INFO ORDER BY DELIVERY_DATE DESC
+	</select>
+	
+	<select id="selectDeliveryInfoListByDeliverydate" parameterType="map" resultMap="deliveryInfoResult">
+		<![CDATA[
+		select * 
+		from delivery_info d
+        where 1=1 
+        AND d.delivery_date BETWEEN to_char(to_date(#{startDate},'yyyy/mm/dd'),'yyyy-mm-dd')
+        AND to_char(to_date(#{endDate},'yyyy/mm/dd'),'yyyy-mm-dd')
+		]]>
+	</select>
+	
+	<insert id="insertDeliveryResult" parameterType="kr.co.seoulit.logistics.busisvc.sales.to.DeliveryInfoTO">
+		INSERT INTO DELIVERY_INFO 
+			VALUES( #{deliveryNo},
+					#{estimateNo},
+					#{contractNo},
+					#{contractDetailNo},
+					#{customerCode},
+					#{personCodeInCharge},
+					#{itemCode},
+					#{itemName},
+					#{unitOfDelivery},
+					#{deliveryAmount},
+					#{unitPrice},
+					#{sumPrice},
+					#{deliveryDate},
+					#{deliveryPlaceName}
+				  )
+	</insert>
+	
+	<parameterMap type="map" id="deliverParameter">
+		<parameter property="contractDetailNo" javaType="java.lang.String" jdbcType="VARCHAR" mode="IN" />
+		<parameter property="ERROR_CODE" javaType="java.lang.Integer" jdbcType="DECIMAL" mode="OUT" />
+		<parameter property="ERROR_MSG" javaType="java.lang.String" jdbcType="VARCHAR" mode="OUT" />
+	</parameterMap>
+	
+	<select id="deliver" parameterMap="deliverParameter" statementType="CALLABLE">
+		<![CDATA[
+		{call P_DELIVER(?,?,?)}
+		]]>
+	</select>
+	
+	<update id="updateDeliveryResult" parameterType="kr.co.seoulit.logistics.busisvc.sales.to.DeliveryInfoTO">
+		UPDATE DELIVERY_INFO SET 
+				DELIVERY_NO = #{deliveryNo},
+				ESTIMATE_NO = #{estimateNo},
+				CONTRACT_NO = #{contractNo},
+				CONTRACT_DETAIL_NO = #{contractDetailNo},
+				CUSTOMER_CODE = #{customerCode},
+				PERSON_CODE_IN_CHARGE = #{personCodeInCharge},
+				ITEM_CODE = #{itemCode},
+				ITEM_NAME = #{itemName},
+				UNIT_OF_DELIVERY = #{unitOfDelivery},
+				DELIVERY_AMOUNT = #{deliveryAmount},
+				UNIT_PRICE = #{unitPrice},
+				SUM_PRICE = #{sumPrice},
+				DELIVERY_DATE = #{deliveryDate},
+				DELIVERY_PLACE_NAME = #{deliveryPlaceName}
+				WHERE 
+				DELIVERY_NO = #{deliveryNo}
+	</update>
+	
+	<delete id="deleteDeliveryResult" parameterType="kr.co.seoulit.logistics.busisvc.sales.to.DeliveryInfoTO">
+		DELETE FROM DELIVERY_INFO WHERE DELIVERY_NO = #{deliveryNo}
+	</delete>
+	
+</mapper>
