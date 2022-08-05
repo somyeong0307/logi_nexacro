@@ -40,6 +40,7 @@ public class CompanyController {
 		
 	}
 
+	//매출,매입 합계 조회
 	@RequestMapping(value = "/companyinfo/sum")
 	public void searchCompanyDealInfoList(@RequestAttribute("reqData") PlatformData reqData,
 			@RequestAttribute("resData") PlatformData resData) throws Exception {
@@ -54,13 +55,13 @@ public class CompanyController {
 		datasetBeanMapper.beansToDataset(resData, dealList, DealTO.class);
 	}
 	
+	//거래내역 조회
 	@RequestMapping(value = "/dealinfo")
 	public void searchDealInfo(@RequestAttribute("reqData") PlatformData reqData,
 			@RequestAttribute("resData") PlatformData resData) throws Exception {
 			
 		String dealCode = reqData.getVariable("deal_code").getString();
 		DealDetailTO dealDetailInfo = compInfoService.getDealDetailInfo(dealCode);
-		System.out.println("아앗"+dealDetailInfo);
 		datasetBeanMapper.beanToDataset(resData, dealDetailInfo, DealDetailTO.class);
 	}
 	
