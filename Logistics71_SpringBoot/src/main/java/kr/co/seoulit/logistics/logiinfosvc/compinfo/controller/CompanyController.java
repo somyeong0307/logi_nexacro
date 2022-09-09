@@ -13,11 +13,9 @@ import kr.co.seoulit.logistics.logiinfosvc.compinfo.to.CustomerInfoTO;
 import kr.co.seoulit.logistics.logiinfosvc.compinfo.to.DealDetailTO;
 import kr.co.seoulit.logistics.logiinfosvc.compinfo.to.DealTO;
 import kr.co.seoulit.logistics.sys.util.DatasetBeanMapper;
-import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @RequestMapping("/compinfo/*")
-@Slf4j
 public class CompanyController {
 
 	@Autowired
@@ -29,15 +27,10 @@ public class CompanyController {
 	@RequestMapping(value = "/company/list")
 	public void searchCompanyList(HttpServletRequest request)  throws Exception {
 		
-		PlatformData resData = (PlatformData) request.getAttribute("resData");
-		log.info("getAttribute로 어떤 값을 가져왔나요? : "+resData);
-		
-			ArrayList<CompanyTO> companyList  = compInfoService.getCompanyList();
-			log.info("DB에서 어떤 값을 가져왔나요? : "+companyList);
-			log.info("DB에서 가져온 값 중 회사코드는 무엇인가요? : "+companyList.get(0).getCompanyCode());
-			
-			datasetBeanMapper.beansToDataset(resData, companyList, CompanyTO.class);
-		
+		PlatformData resData = (PlatformData) request.getAttribute("resData");		
+		ArrayList<CompanyTO> companyList  = compInfoService.getCompanyList();	
+		datasetBeanMapper.beansToDataset(resData, companyList, CompanyTO.class);
+
 	}
 
 	//매출,매입 합계 조회
