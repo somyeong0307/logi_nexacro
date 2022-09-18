@@ -165,7 +165,9 @@ bootJar {
 } */
 
 bootWar{
+
 	archiveFileName = 'ROOT.war'
+	
 }
 
 bootRun {
